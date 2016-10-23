@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css" media="screen">
+		*{margin:0;padding:0;}
+		.clear:after{
+			display: block;
+			height: 0px;
+			clear: both;
+			content: "";
+			overflow: hidden;
+		}
+		.clear{-ms-zoom:1;}
+		body{background: url(资源/精美相册/bg.jpg);overflow: hidden;}
+		.box{
+			width:790px;
+			margin:50px auto;
+		}
+		.box>span{
+          background-color: white;
+          padding:5px;
+          width: 230px;
+          height: 180px;
+          box-shadow: 0px 0px 20px red;
+          display: inline-block;
+          margin-bottom:5px;
+		}
+		.box>span>img{
+           width: 230px;
+           height: 180px;
+		}
+		.showImage{
+			position: absolute;
+			top:0px;
+			left: 0px;
+			width: 100%;
+			height:100%;
+			display: none;
+		}
+        .mask{
+			opacity: 0.8;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top:0px;
+			left:0px;
+			background-color: black;
+		}
+		.imageList{
+			position: absolute;
+            width: 650px;
+            height: 450px;
+            top:50%;
+            margin-top:-225px;
+            left:50%;
+            margin-left: -325px;
+		}
+		.imageList>img{
+			width: 650px;
+			height: 500px;
+			position: absolute;
+			top: 0px;
+			left:0px;
+		}
+		.prev,.next{
+			position: absolute;
+			width: 50px;
+			height: 80px;
+			border-radius: 10px;
+			box-shadow: 0 0 20px #fff;
+			background-color: block;
+			top:50%;
+			margin-top: -40px;
+			color:white;
+			text-align: center;
+			line-height: 80px;
+			font-size: 20px;
+			font-weight: bolder;
+		}
+        .prev{left: 100px;}
+        .next{right: 100px;}
+	</style>
+</head>
+<body>
+<div class="box clear">
+	<span><img src="资源/精美相册/main/1.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/2.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/3.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/4.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/5.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/6.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/7.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/8.jpg" alt=""></span>
+	<span><img src="资源/精美相册/main/9.jpg" alt=""></span>
+</div>
+<div class="showImage">
+	<div class="mask"></div>
+	<div class="imageList">
+		<img src="资源/精美相册/show/0/1.jpg" alt="">
+		<img src="资源/精美相册/show/0/2.jpg" alt="">
+		<img src="资源/精美相册/show/0/3.jpg" alt="">
+		<img src="资源/精美相册/show/0/4.jpg" alt="">
+		<img src="资源/精美相册/show/0/5.jpg" alt="">
+	</div>
+	<div class="prev">&lt;</div>
+	<div class="next">&gt;</div>
+</div>
+	<script src="jQuery/jquery-1.11.3.js"></script>
+	<script>
+		$(function(){
+			$('.box>span').click(function(){
+				$('.showImage').fadeIn('slow');
+				//获取图片的下标
+				//1:获取点击的次序
+				var index  = $(this).index();
+				//2:获取展示图片的列表
+				var $showList = $('.imageList>img');
+				//3：遍历img元素 获取src属性
+				for(var i = 1;i <= $showList.length;i++){
+                   $showList.eq(i-1).attr('src','资源/精美相册/show/'+index+'/'+i+'.jpg');
+				}
+			});
+			$('.showImage').click(function(){
+				$(this).fadeOut('slow');
+			});
+           
+           //前一个的处理
+           $('.prev').click(function(e){
+            //阻止冒泡
+            e.stopPropagation();
+            //处理快速点击的bug
+            if( !$('.imageList').is(':animated') ){
+            $('.imageList img:first').animate({'left':'-100%'},1000,function(){
+            	//把当前的元素追加到
+            	$('.imageList').append($(this));
+            	$(this).animate({'left':'0px'},1000);
+            });
+            $('.imageList').animate({'left':'60%'},1000);
+            $('.imageList').animate({'left':'50%'},1000);
+        }
+           });
+           //后一个处理
+           $('.next').click(function(e){
+            //阻止冒泡
+            e.stopPropagation();
+            if( !$('.imageList').is(':animated')){
+            $('.imageList img:last').animate({'left':'100%'},1000,function(){
+            	//使用回调函数,把当前的元素放到最低端，插在最前面
+            	$('.imageList').prepend($(this));
+            	$(this).animate({'left':'0px'},1000);
+            });
+            //让整体面板左移动
+            $('.imageList').animate({'left':'40%'},1000);
+            $('.imageList').animate({'left':'50%'},1000);
+        }
+           });
+
+
+		});
+	</script>
+</body>
+</html>
